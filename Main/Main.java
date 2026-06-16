@@ -6,6 +6,7 @@ import tpintegrador_programacion2.exception.OpcionInvalidaException;
 public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
+        ArrayList<Categoria> categorias = new ArrayList<>(); //Colecciones
         int opcion = -1;
         
         do { System.out.println("\n=== SISTEMA DE PEDIDOS (FOOD STORE) ===");
@@ -102,5 +103,47 @@ private static void menuCRUD(Scanner input, String entidad) {
 
     } while (opcionCRUD != 0);
 }
-    }
+    /// Colecciones de categoria ///
+private static void menuCategorias(
+        Scanner input,
+        ArrayList<Categoria> categorias) {
+
+    int opcion = -1;
+
+    do {
+        System.out.println("\n--- CATEGORIAS ---");
+        System.out.println("1. Listar");
+        System.out.println("2. Crear");
+        System.out.println("0. Volver");
+
+        opcion = Integer.parseInt(input.nextLine());
+        switch(opcion){
+            case 1:
+                if(categorias.isEmpty()){
+                    System.out.println("No hay categorias cargadas");
+                }else{
+                    for(Categoria c : categorias){
+                        System.out.println(c);
+                    }
+                }
+                break;
+                
+            case 2:
+                System.out.print("Nombre: ");
+                String nombre = input.nextLine();
+                System.out.print("Descripcion: ");
+                String descripcion = input.nextLine();
+                Categoria categoria = new Categoria(nombre, descripcion);
+                categorias.add(categoria);
+                System.out.println(
+                        "Categoria creada");
+                break;
+            case 0:
+                System.out.println("Volviendo al menu principal");
+                break;
+        }
+    }while(opcion != 0);
+}    
+    
+}
 
