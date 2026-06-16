@@ -1,8 +1,5 @@
 package tpintegrador_programacion2.entities;
 
-//CORREGIR: implementar validacion de producto != null en calcularsubtotal
-//que los setter de cantidad y producto disparen calcularsubtotal
-
 public class DetallePedido extends Base{
     private int cantidad;
     private double subtotal;
@@ -20,6 +17,7 @@ public class DetallePedido extends Base{
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+        calcularSubtotal();
     }
 
     public double getSubtotal() {
@@ -36,10 +34,13 @@ public class DetallePedido extends Base{
 
     public void setProducto(Producto producto) {
         this.producto = producto;
+        calcularSubtotal();
     }
     
     private double calcularSubtotal(){
-        subtotal = cantidad * producto.getPrecio();
+        if (producto != null) {
+            subtotal = cantidad * producto.getPrecio();
+        }
         return subtotal;
     }
 
