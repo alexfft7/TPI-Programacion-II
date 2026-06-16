@@ -1,7 +1,5 @@
 package tpintegrador_programacion2.entities;
 
-//Mover logica de generar reporte al main con un bucle anidado
-
 import java.util.ArrayList;
 import java.util.List;
 import tpintegrador_programacion2.enums.Rol;
@@ -85,40 +83,6 @@ public class Usuario extends Base{
         
         p.setUsuario(this);
     }
-    
-    public String generarReporte() {
-    StringBuilder sb = new StringBuilder();
-
-    sb.append("====================================================\n");
-    sb.append(String.format(
-            "USUARIO: %s %s | Mail: %s | Rol: %s\n",
-            nombre,
-            apellido,
-            mail,
-            rol
-    ));
-    sb.append("====================================================\n");
-    double acumulado = 0;
-
-    for (Pedido p : pedidos) {
-        sb.append(String.format("> Pedido #%d | Fecha: %s | Estado: %s | FormaPago: %s\n",p.getId(),p.getFecha(),p.getEstado(),p.getFormaPago()));
-
-        for (DetallePedido d : p.getDetalles()) {
-            sb.append(String.format("   - DetallePedido #%d: %s x %d => Subtotal: $%.2f\n",d.getId(),d.getProducto().getNombre(),d.getCantidad(),d.getSubtotal()));
-        }
-        sb.append(String.format("TOTAL DEL PEDIDO: $%.2f\n\n",p.getTotal()));
-        acumulado += p.getTotal();
-    }
-
-    sb.append(String.format(
-            "TOTAL ACUMULADO del usuario: $%.2f\n",
-            acumulado
-    ));
-
-    sb.append("====================================================\n");
-
-    return sb.toString();
-}
 
     @Override
     public String toString() {
