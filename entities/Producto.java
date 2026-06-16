@@ -1,7 +1,5 @@
 package tpintegrador_programacion2.entities;
 
-//CORREGIR: que el constructor producto requiera obj categoria en lugar de depender de setter
-
 public class Producto extends Base{
     private String nombre;
     private double precio;
@@ -11,12 +9,13 @@ public class Producto extends Base{
     private boolean disponible;
     private Categoria categoria;
 
-    public Producto(String nombre,double precio, int stock,boolean disponible) {
+    public Producto(String nombre,double precio, int stock,boolean disponible, Categoria categoria) {
         super();
         this.nombre = nombre;
         this.precio = precio;
         this.stock = stock;
         this.disponible = disponible;
+        this.categoria = categoria;
     }
 
     public String getNombre() {
