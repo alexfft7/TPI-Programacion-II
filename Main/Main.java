@@ -133,6 +133,18 @@ private static void menuCategorias(
             case 2:
                 System.out.print("Nombre: ");
                 String nombre = input.nextLine();
+                boolean existe = false;
+
+                for (Categoria c : categorias) {
+                    if (c.getNombre().equalsIgnoreCase(nombre)) {
+                        existe = true;
+                break;
+                    }
+                }
+
+                if (existe) {
+                    System.out.println("Esa categoria ya existe.");
+                } else {
                 System.out.print("Descripcion: ");
                 String descripcion = input.nextLine();
                 Categoria categoria = new Categoria(nombre, descripcion);
