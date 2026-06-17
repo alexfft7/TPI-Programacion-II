@@ -1,7 +1,9 @@
 package tpintegrador_programacion2.Main;
 
 import java.util.Scanner;
+import java.util.ArrayList;
 import tpintegrador_programacion2.exception.OpcionInvalidaException;
+import tpintegrador_programacion2.entities.Categoria;
 
 public class Main {
     public static void main(String[] args) {
@@ -26,7 +28,7 @@ public class Main {
                 
          switch (opcion) {
             case 1:
-                menuCRUD(input, "Categorías");
+                menuCategorias(input, categorias);
                 break;
             case 2:
                 menuCRUD(input, "Productos");
