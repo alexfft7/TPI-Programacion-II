@@ -4,6 +4,9 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import tpintegrador_programacion2.exception.OpcionInvalidaException;
 import tpintegrador_programacion2.entities.Categoria;
+import tpintegrador_programacion2.entities.Producto;
+import tpintegrador_programacion2.entities.Usuario;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -116,6 +119,8 @@ private static void menuCategorias(
         System.out.println("\n--- CATEGORIAS ---");
         System.out.println("1. Listar");
         System.out.println("2. Crear");
+        System.out.println("3. Editar");
+        System.out.println("4. Eliminar");
         System.out.println("0. Volver");
 
         opcion = Integer.parseInt(input.nextLine());
@@ -130,7 +135,7 @@ private static void menuCategorias(
                 }
                 break;
                 
-            case 2:
+            case 2: // CREAR
                 System.out.print("Nombre: ");
                 String nombre = input.nextLine();
                 boolean existe = false;
@@ -143,21 +148,71 @@ private static void menuCategorias(
                 }
 
                 if (existe) {
-                    System.out.println("Esa categoria ya existe.");
+                    System.out.println("Ya existe una categoria con ese nombre");
+                    break;
                 } else {
                 System.out.print("Descripcion: ");
                 String descripcion = input.nextLine();
                 Categoria categoria = new Categoria(nombre, descripcion);
-                categorias.add(categoria);
-                System.out.println(
-                        "Categoria creada");
+                categorias.add(categoria); //recorre la coleccion y verifica si existe una categoria con el mismo nombre
+                System.out.println("Categoria creada");
+                }
                 break;
+            case 3: /// EDITAR 
+                System.out.print("Ingrese id que quiere editar: ");
+                Long idEditar = Long.parseLong(input.nextLine());
+                Categoria categoriaEditar = null;
+                for (Categoria c : categorias) {
+                    if (c.getId().equals(idEditar) && !c.isEliminado()) {
+                        categoriaEditar = c;
+                        break;
+                    }
+                }
+               if (categoriaEditar == null) {
+                   System.out.println("Categoria no encontrada");
+                   break;
+               }
+               System.out.print("Nuevo nombre: ");
+               String nuevoNombre = input.nextLine();
+               
+               System.out.print("Nueva descripcion: ");
+               String nuevaDescripcion = input.nextLine();
+               
+               categoriaEditar.setNombre(nuevoNombre);
+               categoriaEditar.setDescripcion(nuevaDescripcion);
+               
+               System.out.println("Categoria editada");
+               break;
+                
+            case 4: // ELIMINAR 
+                System.out.print("Ingrese el id de la categoria a eliminar: ");
+                Long idEliminar = Long.parseLong(input.nextLine());
+                Categoria categoriaEliminar = null;
+                
+                for (Categoria c : categorias) {
+                    if (c.getId().equals(idEliminar) && !c.isEliminado()) {
+                        categoriaEliminar = c;
+                        break;
+                    }
+                }
+                if (categoriaEliminar == null) {
+                    System.out.println("Categoria no encontrada");
+                } else {
+                    categoriaEliminar.setEliminado(true);
+                    System.out.println("Categoria eliminada correctamente");
+                }
+                break;
+
+
+                
             case 0:
                 System.out.println("Volviendo al menu principal");
                 break;
         }
     }while(opcion != 0);
-}    
+}  
+    //PRODUCTOS
+    
     
 }
 
