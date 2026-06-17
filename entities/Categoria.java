@@ -45,9 +45,10 @@ public class Categoria extends Base{
 public String toString() {
 
     return String.format(
-            "Categoria[nombre=%s, descripcion=%s]",
+            "Categoria[nombre=%s, descripcion=%s, id=%s]",
             nombre,
-            descripcion
+            descripcion,
+            getId()
     );
 }
 }
