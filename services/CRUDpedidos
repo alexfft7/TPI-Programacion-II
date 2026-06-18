@@ -1,16 +1,25 @@
 package tpintegrador_programacion2.Main;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import entities.Pedido;
+import entities.Producto;
+import entities.Usuario;
 import enums.Estado;
 import enums.FormaPago;
 
-
 public class CRUDPedidos {
+
     ArrayList<Pedido> pedidos = new ArrayList<>();
     private ArrayList<Usuario> usuarios;
-    public CRUDPedidos(ArrayList<Usuario> usuarios) {
+    private ArrayList<Producto> productos;
+
+    public CRUDPedidos(
+            ArrayList<Usuario> usuarios,
+            ArrayList<Producto> productos) {
+
         this.usuarios = usuarios;
+        this.productos = productos;
     }
 
     public void menuPedidos(Scanner input) {
@@ -127,12 +136,59 @@ public class CRUDPedidos {
                             formaPago = FormaPago.TARJETA;
                     }
 
-                    Pedido pedido
-                            = new Pedido(estado, formaPago);
+                    Pedido pedido = new Pedido(estado, formaPago);
+
+                    System.out.println("\nProductos disponibles:");
+
+                    for (Producto p : productos) {
+                        if (!p.isEliminado()) {
+                            System.out.println(
+                                    "ID: "
+                                    + p.getId()
+                                    + " - "
+                                    + p.getNombre()
+                                    + " ($"
+                                    + p.getPrecio()
+                                    + ")");
+                        }
+                    }
+
+                    System.out.print("Ingrese id del producto: ");
+                    Long idProducto
+                            = Long.parseLong(input.nextLine());
+
+                    Producto productoSeleccionado = null;
+
+                    for (Producto p : productos) {
+                        if (p.getId().equals(idProducto)
+                                && !p.isEliminado()) {
+
+                            productoSeleccionado = p;
+                            break;
+                        }
+                    }
+
+                    if (productoSeleccionado == null) {
+                        System.out.println("Producto no encontrado");
+                        break;
+                    }
+
+                    System.out.print("Cantidad: ");
+                    int cantidad
+                            = Integer.parseInt(input.nextLine());
+
+                    pedido.addDetallePedido(
+                            cantidad,
+                            productoSeleccionado);
+
                     usuarioSeleccionado.agregarPedido(pedido);
-                    pedidos.add(pedido); // AGREGAMOS EL PEDIDO AL USUARIO
-                    
-                    System.out.println("Pedido creado");
+
+                    pedidos.add(pedido);
+
+                    System.out.println(
+                            "Pedido creado. Total: $"
+                            + pedido.getTotal());
+
                     break;
 
                 case 3:
@@ -261,4 +317,3 @@ public class CRUDPedidos {
         } while (opcion != 0);
     }
 }
-
