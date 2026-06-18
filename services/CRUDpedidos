@@ -1,1 +1,227 @@
+package tpintegrador_programacion2.Main;
+import java.util.ArrayList;
+import java.util.Scanner;
+import entities.Pedido;
+import enums.Estado;
+import enums.FormaPago;
 
+public class CRUDPedidos {
+
+    ArrayList<Pedido> pedidos = new ArrayList<>();
+
+    public void menuPedidos(Scanner input) {
+
+        int opcion = -1;
+
+        do {
+
+            System.out.println("\n--- PEDIDOS ---");
+            System.out.println("1. Listar");
+            System.out.println("2. Crear");
+            System.out.println("3. Editar");
+            System.out.println("4. Eliminar");
+            System.out.println("0. Volver");
+            opcion = Integer.parseInt(input.nextLine());
+            
+            switch (opcion) {
+                case 1:
+                    // Listar
+                    boolean hayPedidos = false;
+                    for (Pedido p : pedidos) {
+                        if (!p.isEliminado()) {
+                            System.out.println(p);
+                            hayPedidos = true;
+                        }
+                    }
+                    if (!hayPedidos) {
+                        System.out.println("No hay pedidos cargados");
+                    }
+
+                    break;
+
+                case 2:
+                    // Crear
+
+                    System.out.println("Estado:");
+                    System.out.println("1. PENDIENTE");
+                    System.out.println("2. CONFIRMADO");
+                    System.out.println("3. TERMINADO");
+                    System.out.println("4. CANCELADO");
+
+                    int opcionEstado
+                            = Integer.parseInt(input.nextLine());
+
+                    Estado estado;
+
+                    switch (opcionEstado) {
+                        case 2:
+                            estado = Estado.CONFIRMADO;
+                            break;
+
+                        case 3:
+                            estado = Estado.TERMINADO;
+                            break;
+
+                        case 4:
+                            estado = Estado.CANCELADO;
+                            break;
+
+                        default:
+                            estado = Estado.PENDIENTE;
+                    }
+
+                    System.out.println("Forma de Pago:");
+                    System.out.println("1. TARJETA");
+                    System.out.println("2. TRANSFERENCIA");
+                    System.out.println("3. EFECTIVO");
+
+                    int opcionPago
+                            = Integer.parseInt(input.nextLine());
+
+                    FormaPago formaPago;
+
+                    switch (opcionPago) {
+                        case 2:
+                            formaPago = FormaPago.TRANSFERENCIA;
+                            break;
+
+                        case 3:
+                            formaPago = FormaPago.EFECTIVO;
+                            break;
+
+                        default:
+                            formaPago = FormaPago.TARJETA;
+                    }
+
+                    Pedido pedido
+                            = new Pedido(estado, formaPago);
+                    pedidos.add(pedido);
+                    System.out.println("Pedido creado");
+                    break;
+
+                case 3:
+                    // Editar
+                    System.out.println("\nPedidos disponibles:");
+                    for (Pedido p : pedidos) {
+                        if (!p.isEliminado()) {
+                            System.out.println(
+                                    "ID: "
+                                    + p.getId()
+                                    + " - "
+                                    + p.getEstado());
+                        }
+                    }
+                    System.out.print(
+                            "Ingrese id del pedido a editar: ");
+                    Long idEditar
+                            = Long.parseLong(input.nextLine());
+
+                    Pedido pedidoEditar = null;
+
+                    for (Pedido p : pedidos) {
+                        if (p.getId().equals(idEditar)
+                                && !p.isEliminado()) {
+
+                            pedidoEditar = p;
+                            break;
+                        }
+                    }
+
+                    if (pedidoEditar == null) {
+                        System.out.println(
+                                "Pedido no encontrado");
+                        break;
+                    }
+
+                    System.out.println("Nuevo Estado:");
+                    System.out.println("1. PENDIENTE");
+                    System.out.println("2. CONFIRMADO");
+                    System.out.println("3. TERMINADO");
+                    System.out.println("4. CANCELADO");
+
+                    int nuevoEstado
+                            = Integer.parseInt(input.nextLine());
+
+                    switch (nuevoEstado) {
+
+                        case 2:
+                            pedidoEditar.setEstado(
+                                    Estado.CONFIRMADO);
+                            break;
+
+                        case 3:
+                            pedidoEditar.setEstado(
+                                    Estado.TERMINADO);
+                            break;
+
+                        case 4:
+                            pedidoEditar.setEstado(
+                                    Estado.CANCELADO);
+                            break;
+
+                        default:
+                            pedidoEditar.setEstado(
+                                    Estado.PENDIENTE);
+                    }
+
+                    System.out.println(
+                            "Pedido editado");
+
+                    break;
+
+                case 4:
+                    // Eliminar
+
+                    System.out.println("\nPedidos disponibles:");
+
+                    for (Pedido p : pedidos) {
+                        if (!p.isEliminado()) {
+                            System.out.println(
+                                    "ID: "
+                                    + p.getId()
+                                    + " - "
+                                    + p.getEstado());
+                        }
+                    }
+
+                    System.out.print(
+                            "Ingrese id del pedido a eliminar: ");
+
+                    Long idEliminar
+                            = Long.parseLong(input.nextLine());
+
+                    Pedido pedidoEliminar = null;
+
+                    for (Pedido p : pedidos) {
+                        if (p.getId().equals(idEliminar)
+                                && !p.isEliminado()) {
+
+                            pedidoEliminar = p;
+                            break;
+                        }
+                    }
+
+                    if (pedidoEliminar == null) {
+
+                        System.out.println(
+                                "Pedido no encontrado");
+
+                    } else {
+
+                        pedidoEliminar.setEliminado(true);
+
+                        System.out.println(
+                                "Pedido eliminado correctamente");
+                    }
+
+                    break;
+
+                case 0:
+                    System.out.println(
+                            "Volviendo al menu principal");
+                    break;
+            }
+
+        } while (opcion != 0);
+    }
+}
