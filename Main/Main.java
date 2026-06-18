@@ -126,12 +126,17 @@ private static void menuCategorias(
         opcion = Integer.parseInt(input.nextLine());
         switch(opcion){
             case 1:
-                if(categorias.isEmpty()){
-                    System.out.println("No hay categorias cargadas");
-                }else{
-                    for(Categoria c : categorias){
+                boolean hayCategorias = false;
+
+                for (Categoria c : categorias) {
+                    if (!c.isEliminado()) {
                         System.out.println(c);
+                        hayCategorias = true;
                     }
+                }
+
+    if (!hayCategorias) {
+        System.out.println("No hay categorias cargadas");
                 }
                 break;
                 
@@ -159,6 +164,14 @@ private static void menuCategorias(
                 }
                 break;
             case 3: /// EDITAR 
+
+                System.out.println("\nCategorias disponibles:");            
+                for (Categoria c : categorias) {
+                    if (!c.isEliminado()) {
+                        System.out.println("ID: " + c.getId() + " - " + c.getNombre());
+                    }
+                }
+                
                 System.out.print("Ingrese id que quiere editar: ");
                 Long idEditar = Long.parseLong(input.nextLine());
                 Categoria categoriaEditar = null;
