@@ -1,25 +1,27 @@
 package tpintegrador_programacion2.Main;
 
 import java.util.Scanner;
-
-import tpintegrador_programacion2.config.CRUDCategorias;
-import tpintegrador_programacion2.config.CRUDProductos;
-import tpintegrador_programacion2.config.CRUDUsuarios;
-import tpintegrador_programacion2.config.CRUDPedidos;
-
-import tpintegrador_programacion2.exception.OpcionInvalidaException;
+import services.CRUDCategorias;
+import services.CRUDProductos;
+import services.CRUDUsuarios;
+import services.CRUDPedidos;
+import exception.OpcionInvalidaException;
 
 public class Main {
 
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
-
-        CRUDCategorias menuCrudCategorias = new CRUDCategorias();
-        CRUDProductos menuCrudProductos = new CRUDProductos();
-        CRUDUsuarios menuCrudUsuarios = new CRUDUsuarios();
-        CRUDPedidos menuCrudPedidos = new CRUDPedidos();
-
+        CRUDCategorias crudCategorias = 
+                new CRUDCategorias();
+        CRUDProductos crudProductos
+                = new CRUDProductos(crudCategorias.getCategorias());
+        CRUDUsuarios crudUsuarios
+                = new CRUDUsuarios();
+        CRUDPedidos crudPedidos
+                = new CRUDPedidos(
+                        crudUsuarios.getUsuarios(),
+                        crudProductos.getProductos());
         int opcion = -1;
 
         do {
@@ -44,33 +46,36 @@ public class Main {
                 switch (opcion) {
 
                     case 1:
-                        menuCrudCategorias.menuCategorias(input);
+                        crudCategorias.menuCategorias(input);
                         break;
 
                     case 2:
-                        menuCrudProductos.menuProductos(input);
+                        crudProductos.menuProductos(input);
                         break;
 
                     case 3:
-                        menuCrudUsuarios.menuUsuarios(input);
+                        crudUsuarios.menuUsuarios(input);
                         break;
 
                     case 4:
-                        menuCrudPedidos.menuPedidos(input);
+                        crudPedidos.menuPedidos(input);
                         break;
 
                     case 0:
-                        System.out.println("Saliendo del sistema...");
+                        System.out.println(
+                                "Saliendo del sistema...");
                         break;
                 }
 
             } catch (OpcionInvalidaException e) {
 
-                System.out.println("Error: " + e.getMessage());
+                System.out.println(
+                        "Error: " + e.getMessage());
 
             } catch (NumberFormatException e) {
 
-                System.out.println("Error: Debe ingresar un número.");
+                System.out.println(
+                        "Error: Debe ingresar un número.");
             }
 
         } while (opcion != 0);
