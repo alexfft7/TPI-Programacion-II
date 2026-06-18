@@ -5,9 +5,13 @@ import entities.Pedido;
 import enums.Estado;
 import enums.FormaPago;
 
-public class CRUDPedidos {
 
+public class CRUDPedidos {
     ArrayList<Pedido> pedidos = new ArrayList<>();
+    private ArrayList<Usuario> usuarios;
+    public CRUDPedidos(ArrayList<Usuario> usuarios) {
+        this.usuarios = usuarios;
+    }
 
     public void menuPedidos(Scanner input) {
 
@@ -22,7 +26,7 @@ public class CRUDPedidos {
             System.out.println("4. Eliminar");
             System.out.println("0. Volver");
             opcion = Integer.parseInt(input.nextLine());
-            
+
             switch (opcion) {
                 case 1:
                     // Listar
@@ -41,6 +45,36 @@ public class CRUDPedidos {
 
                 case 2:
                     // Crear
+                    System.out.println("\nUsuarios disponibles:");
+                    for (Usuario u : usuarios) {
+                        if (!u.isEliminado()) {
+                            System.out.println(
+                                    "ID: "
+                                    + u.getId()
+                                    + " - "
+                                    + u.getNombre());
+                        }
+                    }
+
+                    System.out.print("Ingrese id del usuario: ");
+                    Long idUsuario
+                            = Long.parseLong(input.nextLine());
+
+                    Usuario usuarioSeleccionado = null;
+
+                    for (Usuario u : usuarios) {
+                        if (u.getId().equals(idUsuario)
+                                && !u.isEliminado()) {
+
+                            usuarioSeleccionado = u;
+                            break;
+                        }
+                    }
+
+                    if (usuarioSeleccionado == null) {
+                        System.out.println("Usuario no encontrado");
+                        break;
+                    }
 
                     System.out.println("Estado:");
                     System.out.println("1. PENDIENTE");
@@ -95,7 +129,9 @@ public class CRUDPedidos {
 
                     Pedido pedido
                             = new Pedido(estado, formaPago);
-                    pedidos.add(pedido);
+                    usuarioSeleccionado.agregarPedido(pedido);
+                    pedidos.add(pedido); // AGREGAMOS EL PEDIDO AL USUARIO
+                    
                     System.out.println("Pedido creado");
                     break;
 
@@ -225,3 +261,4 @@ public class CRUDPedidos {
         } while (opcion != 0);
     }
 }
+
