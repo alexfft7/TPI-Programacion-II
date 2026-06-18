@@ -9,9 +9,14 @@ import tpintegrador_programacion2.entities.Producto;
 import tpintegrador_programacion2.entities.Usuario;
 
 
+
 public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
+        CRUDCategorias menuCrudCategorias = new CRUDCategorias();
+        CRUDProductos menuCrudProductos = new CRUDProductos();
+        CRUDUsuarios menuCrudUsuarios = new CRUDUsuarios();
+        CRUDPedidos menuCrudPedidos = new CRUDPedidos();
         int opcion = -1;
 
         CRUDCategorias menuCrudCategorias = new CRUDCategorias();
