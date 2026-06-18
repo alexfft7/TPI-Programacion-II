@@ -1,1 +1,114 @@
+package tpintegrador_programacion2.services;
+import java.util.ArrayList;
+import java.util.Scanner;
+import entities.Producto;
 
+public class CRUDProductos {
+    ArrayList<Producto> productos = new ArrayList<>();
+    public void menuProductos(Scanner input){
+        int opcion = -1;
+
+        do{
+            System.out.println("\n--- PRODUCTOS ---");
+            System.out.println("1. Listar");
+            System.out.println("2. Crear");
+            System.out.println("3. Editar");
+            System.out.println("4. Eliminar");
+            System.out.println("0. Volver");
+
+            opcion = Integer.parseInt(input.nextLine());
+            switch(opcion){
+                case 1:// Listar 
+                    boolean hayProductos = false;
+                    
+                    for (Producto p : productos) {
+                        if (!p.isEliminado()) {
+                            System.out.println(p);
+                            hayProductos = true;
+                        }
+                    }
+                    if (!hayProductos) {
+                        System.out.println("No hay productos cargados");
+                    }
+                    break;
+                case 2: // Crear
+                    System.out.print("Nombre: ");
+                    String nombre = input.nextLine();
+                    System.out.print("Precio: ");
+                    double precio = Double.parseDouble(input.nextLine()); 
+                    System.out.print("Stock: ");
+                            int stock = Integer.parseInt(input.nextLine());
+                            System.out.print("Disponible: ");
+                            
+                            boolean disponible = Boolean.parseBoolean(input.nextLine());
+                            Producto producto =
+                                    new Producto(
+                                            nombre,
+                                            precio,
+                                            stock,
+                                            disponible);
+                            productos.add(producto);
+                            System.out.println("Producto creado");
+                            break;
+                            
+                case 3:// Editar
+                    System.out.println("\nProductos disponibles:");
+                    for (Producto p : productos) {
+                    if (!p.isEliminado()) {
+                        System.out.println( 
+                                "ID: " + p.getId() + " - " + p.getNombre());}
+                    }
+                    System.out.print("Ingrese id del producto que desea editar: ");
+                    Long idEditar = Long.parseLong (input.nextLine());
+                    
+                    Producto productoEditar = null;
+                    
+                    for (Producto p : productos) {
+                        if (p.getId().equals(idEditar) && !p.isEliminado()) {
+                            productoEditar = p;
+                            
+                            break;
+                        }
+                    }
+                    if (productoEditar == null) {
+                        System.out.println("Producto no encontrado");
+                        break;
+                    }
+                    System.out.print("Nuevo nombre: ");
+                    productoEditar.setNombre(input.nextLine());
+                    System.out.print("Nuevo precio: ");
+                    productoEditar.setPrecio(Double.parseDouble(input.nextLine()));
+                    System.out.print("Nuevo stock: ");
+                    productoEditar.setStock(
+                            Integer.parseInt(input.nextLine()));
+                    System.out.println("Producto editado");
+                    break;
+                
+                case 4: //Eliminar
+                    System.out.print("Ingrese id del producto a eliminar: ");
+                    Long idEliminar = Long.parseLong(input.nextLine());
+                    Producto productoEliminar = null;
+                    for (Producto p : productos) {
+                        if (p.getId().equals(idEliminar) && !p.isEliminado()) {
+                            productoEliminar = p;
+                            break;
+                        }
+                    }
+
+                    if (productoEliminar == null) {
+                        System.out.println("Producto no encontrado");
+                    } else {
+                        productoEliminar.setEliminado(true);
+                        System.out.println("Producto eliminado correctamente");
+                    }
+
+                    break;
+
+                case 0:
+                    System.out.println("Volviendo al menu principal");
+                    break;
+            }
+
+        } while (opcion != 0);
+    }
+}
