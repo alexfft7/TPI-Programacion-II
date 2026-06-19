@@ -6,19 +6,22 @@ import java.util.Scanner;
 import entities.Producto;
 
 public class CRUDProductos {
+
     ArrayList<Producto> productos = new ArrayList<>();
     private ArrayList<Categoria> categorias;
 
     public CRUDProductos(ArrayList<Categoria> categorias) {
         this.categorias = categorias;
     }
+
     public ArrayList<Producto> getProductos() {
         return productos;
     }
-    public void menuProductos(Scanner input){
+
+    public void menuProductos(Scanner input) {
         int opcion = -1;
 
-        do{
+        do {
 
             System.out.println("\n--- PRODUCTOS ---");
             System.out.println("1. Listar");
@@ -28,16 +31,16 @@ public class CRUDProductos {
             System.out.println("0. Volver");
 
             try {
-            opcion = Integer.parseInt(input.nextLine());
+                opcion = Integer.parseInt(input.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Error: debe ingresar una opción numérica.");
                 continue;
             }
 
-            switch(opcion){
+            switch (opcion) {
                 case 1:// Listar 
                     boolean hayProductos = false;
-  
+
                     for (Producto p : productos) {
                         if (!p.isEliminado()) {
                             System.out.println(
@@ -55,70 +58,81 @@ public class CRUDProductos {
                         System.out.println("No hay productos cargados");
                     }
                     break;
-                case 2: // Crear
-                    System.out.println("Categorias disponibles:");
-                    for (Categoria c : categorias) {
-                        if (!c.isEliminado()) {
-                            System.out.println(
-                                    "ID: "
-                                    + c.getId()
-                                    + " - "
-                                    + c.getNombre());
-                        }
-                    }
-                    System.out.print("Ingrese id de la categoria: ");
-                    Long idCategoria
-                            = Long.parseLong(input.nextLine());
-                    Categoria categoriaSeleccionada = null;
+                case 2:
+                    try {
 
-                    for (Categoria c : categorias) {
-                        if (c.getId().equals(idCategoria)
-                                && !c.isEliminado()) {
-                            categoriaSeleccionada = c;
+                        System.out.println("Categorias disponibles:");
+                        for (Categoria c : categorias) {
+                            if (!c.isEliminado()) {
+                                System.out.println(
+                                        "ID: "
+                                        + c.getId()
+                                        + " - "
+                                        + c.getNombre());
+                            }
+                        }
+
+                        System.out.print("Ingrese id de la categoria: ");
+                        Long idCategoria = Long.parseLong(input.nextLine());
+
+                        Categoria categoriaSeleccionada = null;
+
+                        for (Categoria c : categorias) {
+                            if (c.getId().equals(idCategoria)
+                                    && !c.isEliminado()) {
+                                categoriaSeleccionada = c;
+                                break;
+                            }
+                        }
+
+                        if (categoriaSeleccionada == null) {
+                            System.out.println("Categoria no encontrada");
                             break;
                         }
-                    }
-                    if (categoriaSeleccionada == null) {
-                        System.out.println("Categoria no encontrada");
-                        break;
-                    }
-                    System.out.print("Nombre: ");
-                    String nombre = input.nextLine();
-                    if (nombre.isEmpty()) {  
-                        throw new IllegalArgumentException(
-                            "El nombre no puede estar vacío.");
+
+                        System.out.print("Nombre: ");
+                        String nombre = input.nextLine();
+
+                        if (nombre.isEmpty()) {
+                            throw new IllegalArgumentException(
+                                    "El nombre no puede estar vacío.");
                         }
 
-                    System.out.print("Precio: ");
-                    double precio = Double.parseDouble(input.nextLine());
-                    if (precio < 0) {  
-                        throw new IllegalArgumentException(
-                            "El precio no puede ser negativo.");
+                        System.out.print("Precio: ");
+                        double precio = Double.parseDouble(input.nextLine());
+
+                        if (precio < 0) {
+                            throw new IllegalArgumentException(
+                                    "El precio no puede ser negativo.");
                         }
 
-                    System.out.print("Stock: ");
-                    int stock = Integer.parseInt(input.nextLine());
-                    if (stock < 0) {
-                        throw new IllegalArgumentException(
-                            "El stock no puede ser negativo.");
+                        System.out.print("Stock: ");
+                        int stock = Integer.parseInt(input.nextLine());
+
+                        if (stock < 0) {
+                            throw new IllegalArgumentException(
+                                    "El stock no puede ser negativo.");
                         }
 
-                    System.out.print("Disponible:  (true/false)");
-                    boolean disponible = Boolean.parseBoolean(input.nextLine());
+                        System.out.print("Disponible (true/false): ");
+                        boolean disponible
+                                = Boolean.parseBoolean(input.nextLine());
 
-                    Producto producto = new Producto(
-                            nombre,
-                            precio,
-                            stock,
-                            disponible
-                            categoriaSeleccionada
-                    );
-                    
-                    categoriaSeleccionada.agregarProducto(producto);
+                        Producto producto = new Producto(
+                                nombre,
+                                precio,
+                                stock,
+                                disponible
+                        );
 
-                    productos.add(producto);
+                        categoriaSeleccionada.agregarProducto(producto);
 
-                    System.out.println("Producto creado con ID: " + producto.getId());
+                        productos.add(producto);
+
+                        System.out.println(
+                                "Producto creado con ID: "
+                                + producto.getId());
+
                     } catch (NumberFormatException e) {
 
                         System.out.println(
@@ -129,40 +143,41 @@ public class CRUDProductos {
                         System.out.println(
                                 "Error: " + e.getMessage());
                     }
+
                     break;
-                            
                 case 3:// Editar
                     System.out.println("\nProductos disponibles:");
                     for (Producto p : productos) {
-                    if (!p.isEliminado()) {
-                        System.out.println( 
-                                "ID: " + p.getId() + " - " + p.getNombre());}
-                    }
-                    try {
-                    System.out.print("Ingrese id del producto que desea editar: ");
-                    Long idEditar = Long.parseLong (input.nextLine());
-                    
-                    Producto productoEditar = null;
-                    
-                    for (Producto p : productos) {
-                        if (p.getId().equals(idEditar) && !p.isEliminado()) {
-                            productoEditar = p;
-                            
-                            break;
+                        if (!p.isEliminado()) {
+                            System.out.println(
+                                    "ID: " + p.getId() + " - " + p.getNombre());
                         }
                     }
-                    if (productoEditar == null) {
-                        System.out.println("Producto no encontrado");
-                        break;
-                    }
-                    System.out.print("Nuevo nombre (ENTER para mantener): "); //ACTUALIZACIONES PARCIALES
-                    String nuevoNombre = input.nextLine();
+                    try {
+                        System.out.print("Ingrese id del producto que desea editar: ");
+                        Long idEditar = Long.parseLong(input.nextLine());
+
+                        Producto productoEditar = null;
+
+                        for (Producto p : productos) {
+                            if (p.getId().equals(idEditar) && !p.isEliminado()) {
+                                productoEditar = p;
+
+                                break;
+                            }
+                        }
+                        if (productoEditar == null) {
+                            System.out.println("Producto no encontrado");
+                            break;
+                        }
+                        System.out.print("Nuevo nombre (ENTER para mantener): "); //ACTUALIZACIONES PARCIALES
+                        String nuevoNombre = input.nextLine();
                         if (!nuevoNombre.isBlank()) {
                             productoEditar.setNombre(nuevoNombre);
                         }
 
-                    System.out.print("Nuevo precio (ENTER para mantener): ");
-                    String precioTexto = input.nextLine();
+                        System.out.print("Nuevo precio (ENTER para mantener): ");
+                        String precioTexto = input.nextLine();
                         if (!precioTexto.isBlank()) {
                             double nuevoPrecio = Double.parseDouble(precioTexto);
                             if (nuevoPrecio < 0) {
@@ -171,17 +186,17 @@ public class CRUDProductos {
                             productoEditar.setPrecio(nuevoPrecio);
                         }
 
-                    System.out.print("Nuevo stock (ENTER para mantener): ");
+                        System.out.print("Nuevo stock (ENTER para mantener): ");
                         String stockTexto = input.nextLine();
                         if (!stockTexto.isBlank()) {
-                            int nuevoStock = Integer.parseInt(stockTexto); 
+                            int nuevoStock = Integer.parseInt(stockTexto);
                             if (nuevoStock < 0) {
                                 throw new IllegalArgumentException("El stock no puede ser negativo.");
                             }
                             productoEditar.setStock(nuevoStock);
-                        } 
+                        }
 
-                    System.out.println("Producto editado");
+                        System.out.println("Producto editado");
                     } catch (NumberFormatException e) { //CATCH
 
                         System.out.println(
@@ -193,23 +208,23 @@ public class CRUDProductos {
                                 "Error: " + e.getMessage());
                     }
                     break;
-                
+
                 case 4:
                     try {
-                    System.out.print("Ingrese id del producto a eliminar: ");
-                    Long idEliminar = Long.parseLong(input.nextLine());
-                    Producto productoEliminar = null;
-                    for (Producto p : productos) {
-                        if (p.getId().equals(idEliminar) && !p.isEliminado()) {
-                            productoEliminar = p;
-                            break;
+                        System.out.print("Ingrese id del producto a eliminar: ");
+                        Long idEliminar = Long.parseLong(input.nextLine());
+                        Producto productoEliminar = null;
+                        for (Producto p : productos) {
+                            if (p.getId().equals(idEliminar) && !p.isEliminado()) {
+                                productoEliminar = p;
+                                break;
+                            }
                         }
-                    }
 
-                    if (productoEliminar == null) {
-                        System.out.println("Producto no encontrado");
-                    } else {
-                        System.out.print("¿Confirma la eliminación? (S/N): "); //CONFIRMAR ELIMINAR
+                        if (productoEliminar == null) {
+                            System.out.println("Producto no encontrado");
+                        } else {
+                            System.out.print("¿Confirma la eliminación? (S/N): "); //CONFIRMAR ELIMINAR
                             String confirmacion = input.nextLine();
 
                             if (confirmacion.equalsIgnoreCase("S")) {
