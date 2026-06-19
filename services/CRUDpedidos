@@ -34,7 +34,13 @@ public class CRUDPedidos {
             System.out.println("3. Editar");
             System.out.println("4. Eliminar");
             System.out.println("0. Volver");
-            opcion = Integer.parseInt(input.nextLine());
+
+            try {
+                opcion = Integer.parseInt(input.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Debe ingresar una opción válida.");
+                continue;
+            }
 
             switch (opcion) {
                 case 1:
@@ -65,9 +71,17 @@ public class CRUDPedidos {
                         }
                     }
 
-                    System.out.print("Ingrese id del usuario: ");
-                    Long idUsuario
-                            = Long.parseLong(input.nextLine());
+                    Long idUsuario;
+
+                    try {
+                        System.out.print("Ingrese id del usuario: ");
+                        idUsuario = Long.parseLong(input.nextLine());
+
+                    } catch (NumberFormatException e) {
+                        System.out.println( "ID inválido.");
+
+                        break;
+                    }
 
                     Usuario usuarioSeleccionado = null;
 
@@ -91,8 +105,15 @@ public class CRUDPedidos {
                     System.out.println("3. TERMINADO");
                     System.out.println("4. CANCELADO");
 
-                    int opcionEstado
-                            = Integer.parseInt(input.nextLine());
+                    int opcionEstado;
+                    try {
+                        opcionEstado = Integer.parseInt(input.nextLine());
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Estado inválido");
+
+                        break;
+                    } 
 
                     Estado estado;
 
@@ -118,8 +139,16 @@ public class CRUDPedidos {
                     System.out.println("2. TRANSFERENCIA");
                     System.out.println("3. EFECTIVO");
 
-                    int opcionPago
-                            = Integer.parseInt(input.nextLine());
+                    int opcionPago;
+
+                    try {
+                        opcionPago = Integer.parseInt(input.nextLine());
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Forma de pago inválida");
+
+                        break;
+                    }
 
                     FormaPago formaPago;
 
@@ -138,6 +167,8 @@ public class CRUDPedidos {
 
                     Pedido pedido = new Pedido(estado, formaPago);
 
+                    String continuar;
+                    do {
                     System.out.println("\nProductos disponibles:");
 
                     for (Producto p : productos) {
@@ -152,10 +183,16 @@ public class CRUDPedidos {
                                     + ")");
                         }
                     }
-
+                    Long idProducto;
+                        try {
                     System.out.print("Ingrese id del producto: ");
-                    Long idProducto
+                    idProducto
                             = Long.parseLong(input.nextLine());
+                    } catch (NumberFormatException e) {
+                            System.out.println("ID inválido.");
+
+                            break;
+                    }
 
                     Producto productoSeleccionado = null;
 
@@ -173,13 +210,39 @@ public class CRUDPedidos {
                         break;
                     }
 
+                    int cantidad;
+                    try {
                     System.out.print("Cantidad: ");
-                    int cantidad
+                    cantidad
                             = Integer.parseInt(input.nextLine());
+                    } catch (NumberFormatException e) {
+                            System.out.println("Cantidad inválida");
 
+                            break;
+                        }
+
+                    try {
                     pedido.addDetallePedido(
                             cantidad,
                             productoSeleccionado);
+                    } catch (Exception e) {
+                            System.out.println("Error al agregar detalle: " + e.getMessage());
+                            pedido = null;
+
+                            break;
+                        }
+
+                        System.out.print("¿Agregar otro producto? (S/N): ");
+
+                        continuar =input.nextLine();
+
+                    } while (continuar.equalsIgnoreCase("S"));
+
+                    if (pedido == null) {
+                        System.out.println("Pedido cancelado.");
+
+                        break;
+                    }
 
                     usuarioSeleccionado.agregarPedido(pedido);
 
@@ -203,10 +266,18 @@ public class CRUDPedidos {
                                     + p.getEstado());
                         }
                     }
-                    System.out.print(
-                            "Ingrese id del pedido a editar: ");
-                    Long idEditar
-                            = Long.parseLong(input.nextLine());
+                    Long idEditar;
+
+                    try {
+                        System.out.print("Ingrese id del pedido a editar: ");
+                        idEditar =
+                                Long.parseLong(input.nextLine());
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("ID inválido.");
+
+                        break;
+                    }
 
                     Pedido pedidoEditar = null;
 
@@ -256,6 +327,31 @@ public class CRUDPedidos {
                                     Estado.PENDIENTE);
                     }
 
+                    System.out.println("Nueva Forma de Pago:");
+
+                    System.out.println( "1. TARJETA");
+                    System.out.println("2. TRANSFERENCIA");
+                    System.out.println("3. EFECTIVO");
+
+                    int nuevoPago = Integer.parseInt(input.nextLine());
+
+                    switch (nuevoPago) {
+
+                        case 2:
+                            pedidoEditar.setFormaPago(
+                            FormaPago.TRANSFERENCIA);
+                            break;
+
+                        case 3:
+                            pedidoEditar.setFormaPago(
+                            FormaPago.EFECTIVO);
+                            break;
+
+                        default:
+                            pedidoEditar.setFormaPago(
+                            FormaPago.TARJETA);
+                    }
+
                     System.out.println(
                             "Pedido editado");
 
@@ -276,11 +372,17 @@ public class CRUDPedidos {
                         }
                     }
 
-                    System.out.print(
-                            "Ingrese id del pedido a eliminar: ");
+                    Long idEliminar;
 
-                    Long idEliminar
-                            = Long.parseLong(input.nextLine());
+                    try {
+                        System.out.print("Ingrese id del pedido a eliminar: ");
+                        idEliminar = Long.parseLong(input.nextLine());
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("ID inválido.");
+
+                        break;
+                    }
 
                     Pedido pedidoEliminar = null;
 
@@ -299,11 +401,19 @@ public class CRUDPedidos {
                                 "Pedido no encontrado");
 
                     } else {
+                        System.out.print("¿Confirma la eliminación? (S/N): ");
 
-                        pedidoEliminar.setEliminado(true);
+                        String confirmacion = input.nextLine();
 
-                        System.out.println(
-                                "Pedido eliminado correctamente");
+                        if (confirmacion.equalsIgnoreCase("S")) {
+                            pedidoEliminar.setEliminado(true);
+
+                        System.out.println("Pedido eliminado correctamente");
+                    } else {
+
+                            System.out.println(
+                                    "Eliminación cancelada");
+                        }
                     }
 
                     break;
