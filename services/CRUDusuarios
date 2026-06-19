@@ -21,7 +21,12 @@ public class CRUDUsuarios {
             System.out.println("4. Eliminar");
             System.out.println("0. Volver");
 
+            try {
             opcion = Integer.parseInt(input.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Error: debe ingresar una opción válida.");
+                continue;
+            }
 
             switch (opcion) {
                 case 1:// listar
@@ -48,12 +53,40 @@ public class CRUDUsuarios {
                     System.out.print("Mail: ");
                     String mail = input.nextLine();
 
+                    if (mail.isEmpty()) {
+                        System.out.println("Error: el mail no puede estar vacío.");
+                        break;
+                    }
+
+                    boolean mailExiste = false;
+
+                    for (Usuario u : usuarios) {
+                        if (!u.isEliminado() && u.getMail().equalsIgnoreCase(mail)) {
+
+                            mailExiste = true;
+                            break;
+                        }
+                    }
+
+                    if (mailExiste) {
+                        System.out.println("Error: el mail ya existe.");
+                        break;
+                    }
+
+                    System.out.print("Celular: ");
+                    String celular = input.nextLine();
+
                     System.out.println("Rol:");
                     System.out.println("1. ADMIN");
                     System.out.println("2. USUARIO");
 
-                    int opcionRol
-                            = Integer.parseInt(input.nextLine());
+                    int opcionRol;
+                     try {
+                        opcionRol = Integer.parseInt(input.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error: rol inválido.");
+                        break;
+                    }       
 
                     Rol rol;
 
@@ -67,10 +100,11 @@ public class CRUDUsuarios {
                                     nombre,
                                     apellido,
                                     mail,
+                                    celular,
                                     rol);
                     usuarios.add(usuario);
 
-                    System.out.println("Usuario creado");
+                    System.out.println("Usuario creado con ID: " + usuario.getId());
                     break;
 
                 case 3:
@@ -87,8 +121,15 @@ public class CRUDUsuarios {
                         }
                     }
                     System.out.print("Ingrese id del usuario a editar: ");
-                    Long idEditar
-                            = Long.parseLong(input.nextLine());
+                    Long idEditar;
+                    try {
+                        idEditar = Long.parseLong(
+                                input.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println("ID inválido.");
+                        break;
+                    }
+
                     Usuario usuarioEditar = null;
 
                     for (Usuario u : usuarios) {
@@ -109,10 +150,54 @@ public class CRUDUsuarios {
                     usuarioEditar.setApellido(input.nextLine());
 
                     System.out.print("Nuevo mail: ");
-                    usuarioEditar.setMail(input.nextLine());
+                    String nuevoMail =
+                            input.nextLine().trim();
 
-                    System.out.println("Usuario editado");
-                    
+                    boolean mailDuplicado = false;
+
+                    for (Usuario u : usuarios) {
+
+                        if (!u.getId().equals(
+                                usuarioEditar.getId())
+                                && !u.isEliminado()
+                                && u.getMail()
+                                        .equalsIgnoreCase(
+                                                nuevoMail)) {
+
+                            mailDuplicado = true;
+                            break;
+                        }
+                    }
+
+                    if (mailDuplicado) {
+                        System.out.println("Error: el mail ya existe.");
+
+                        break;
+                    }
+
+                    usuarioEditar.setMail(nuevoMail);
+
+                    System.out.print("Nuevo celular: ");
+                    usuarioEditar.setCelular(input.nextLine());
+
+                    System.out.print(
+                            "¿Confirma la actualización? (S/N): ");
+
+                    String confirmarEdicion =
+                            input.nextLine();
+
+                    if (confirmarEdicion
+                            .equalsIgnoreCase("S")) {
+
+                        System.out.println(
+                                "Usuario editado correctamente");
+
+                    } else {
+
+                        System.out.println(
+                                "Actualización cancelada");
+                    }
+
                     break;
 
                 case 4:
@@ -130,7 +215,16 @@ public class CRUDUsuarios {
 
                     System.out.print("Ingrese id del usuario que desea eliminar: ");
 
-                    Long idEliminar = Long.parseLong(input.nextLine());
+                    Long idEliminar;
+                    try {
+                        idEliminar = Long.parseLong(
+                                input.nextLine());
+                    } catch (NumberFormatException e) {
+                        System.out.println(
+                                "ID inválido.");
+                        break;
+                    }
+
                     Usuario usuarioEliminar = null;
 
                     for (Usuario u : usuarios) {
@@ -145,9 +239,18 @@ public class CRUDUsuarios {
                         System.out.println(
                                 "Usuario no encontrado");
                     } else {
-                        usuarioEliminar.setEliminado(true);
-                        System.out.println(
-                                "Usuario eliminado correctamente");
+                        System.out.print("¿Confirma la eliminación? (S/N): ");
+
+                        String confirmacion = input.nextLine();
+
+                        if (confirmacion.equalsIgnoreCase("S")) {
+
+                            usuarioEliminar.setEliminado(true);
+                            System.out.println("Usuario eliminado correctamente");
+
+                        } else {
+                            System.out.println("Eliminación cancelada");
+                        }
                     }
                     break;
 
